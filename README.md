@@ -1,48 +1,55 @@
-Assignment 1
-============
-Create a "TVFinder" webpage
+- The slider is simply a jQuery UI slider but it comes with the default style of jQuery UI. To override the default style I extended the
+(1) "ui-slider-handle" class which selects the slider handles
+(2) "ui-slider" which describes the slider background (gray)
+(3) "ui-slider-range" which describes the selected area in the slider.
 
-Overview
---------
-The file "Concept.png" contains a mock-up for a proposed TVFinder feature. Your assignment for Week 1 is to implement a working webpage version of this design.
+- LazyLoad plugin has been implemented by loading the "js/jquery.lazyload.min.js" file. The actual usage is like to call all images in the results container like this: ui.find("img").lazyload({effect:"fadeIn"}); Which will cause all images in the container to be loaded whenever they are in the visible area of the window.
 
+- Responsiveness is managed by bootstrap, what it does is simply to put columns stacked vertically when the screen resolution is too small to show columns horizontally. To actually use bootstrap the only required thing to do is to write all HTML structure in rows and columns using the bootstrap classes "row-fluid" and "span*".
 
-Details
--------
-- As with all assignments, you need to ensure the implementation adheres closely to the mock-up in a wide variety of browsers. For this assignment, consider IE 9+, Firefox 18+, and Chrome 25+ as browsers you must support.
+- The top navigation bar was converted to an static-fixed-bar simply by adding the class "navbar-fixed-top" to the row that contains the header bar. The issue is that this causes the element to be fixed and therefore any content behind it is now shown, to fix this an empty div with a fixed height was added to compensate.
 
-- Don't take short-cuts on the page implementation; implement the page as you think a real production webpage should be structured (e.g., don't put an image in place of the "Search" box; put a real search box there).
+- Since I don't have a web service that returns filtered data and instead we have just an static json file this file is loaded entirely at first and stored in memory for further processing as follows:
 
-- Demonstrate your best efforts to use front-end optimization best practices.
+	(a) The function populateSets() will take the global array "dataset" and obtain all unique TV types and brands, these are used to populate the drop-down boxes types and brands respectively which are found in the filtering box.
+	(b) Four filtering controls are available "s_type", "s_brand", "s_sort" and "range". The later is an array with two values (low and high bounds) this is updated by the slide() event of the slider.
+	(c) The dataset is sorted and then filtered simply by comparing the type, brand and size range and showing only those that match the filter.
+	(d) Everytime a filter control changes (type, brand, sort, or the slider) the listProducts() function is called which will re-render the results.
 
-- None of the text should be imlpemented using bitmaps; real type should be used. Be thoughtful about choosing fonts that best represent the aesthetic of the design; consider using web fonts if appropriate.
+- Validation of input fields is merely done with a regular expression.
 
-- Create a file "televisions.json" that includes at least 100 televisions that will be filtered on the client. A sample file "televisions.json" has been included that illustrates how you might structure your own file.
+- Resources used are only:
 
-- A database of television metadata and thumbnails has been included with this assignment. Use these images for televisions, not the images in the mock-up. However, the three televisions just below the "Get More, For Less" header are part of the design and should be included as-is.
-
-- Assume that your "televisions.json" could be loaded remotely and code accordingly (i.e., it may take several seconds to load). This means the page should not block on loading the file and should display some indication to the user that it is loading data.
-
-- Make it easy to change the location of "televisions.json" in your code so we can deploy it to a server and test your assignment under variable latencies.
-
-- Changing the values of the slider or the drop-downs should cause the set of displayed televisions to change in real-time.
-
-- For an extra challenge, consider using animation effects when the set of filtered televisions changes. For example, after changing the drop-down / slider, televisions that no longer match could fade out, new televisions to the matched set could fade in, and televisions that move locations could move (using ease in / ease out to smooth the move path) to the new location.
-
-- Feel free to use third-party libraries for whatever functionality you wish, but be sensitive to overall page size.
+	(a) http://twitter.github.com/bootstrap/
+	(b) http://jqueryui.com/
 
 
-Goals
------
-The goal of this assignment is to give you an opportunity to learn and demonstrate the following skills:
-- Modern HTML structure and vocabulary
-- Core CSS concepts
-- Core JS concepts
-- Modern JS patterns
-- How JSON maps to JavaScript
-- Thorax
-- Compatibility with required versions of IE, Chrome, Firefox, and Safari on Windows and OS X
-- Page Speed Optimization *
+--------------
 
-Optional:
-- CSS Transitions, Transforms, 3D Transforms, and Animation
+(*) To fix the navigation bar:
+	(a) Find the comment "<!-- Dummy DIV to replace header. -->" and uncomment the DIV below that.
+	(b) Find the DIV element with class "no-navbar-fixed-top" and replace with "navbar-fixed-top".
+	(c) That's all.
+
+-------------------------------------------------------
+Part #2:
+
+- The overlay was implemented as two parts, the background transparent layer which is a fixed DIV in
+order to wrap the whole screen (this one has scroll bar enabled), and a content DIV which is inside the
+first DIV.
+
+- The design of the layer was made on a separate file first and then added as a DIV to the main index.
+
+- All reviews are loaded at startup and then shown/sorted/filtered as requested by the user.
+
+- Currently a cart object is kept in memory to manage the items and their counts.
+
+- Problems faced where all design-issues, it's somewhat difficult to clone the exact same image as
+specified in the image and ensuring all borders are actually where they're supposed to be. This was
+fixed only by trial-and-error after a lot of time of testing.
+
+- The main2.js file contains all the JS code used for the layer.
+
+- One code-related issue is the carousel. It doesn't allow dynamic changes of the contents of it, so
+everytime a change is made to the contents of the carousel it has to be basically re-created from
+scratch and converted to a carousel using bootstrap's .carousel() call.
