@@ -4,7 +4,7 @@ $(function()
 
 	_.loadTemplate = function (name)
 	{
-		$.ajax ({ type: "get", async: false, url: "templates/"+name+".handlebars", dataType: "html", success: function(result) {
+		$.ajax ({ type: "get", async: false, url: "templates/"+name+".hbs", dataType: "html", success: function(result) {
 			templates[name] = result;
 		}});
 	};
